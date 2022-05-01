@@ -95,7 +95,7 @@ public class CaesarCipherTest {
                 // calculate is it time to end the iteration
                 int checkResult = 0;
                 if (spacesAmount > 0) {
-                    checkResult = (symbolsAmount - spacesAmount - serviceSymbolsAmount) / spacesAmount;
+                    checkResult = (symbolsAmount - spacesAmount - serviceSymbolsAmount) / (spacesAmount + 1);
                 }
 
                 if (checkResult > 3 && checkResult < 7) {
