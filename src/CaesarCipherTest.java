@@ -1,6 +1,5 @@
 import java.io.*;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class CaesarCipherTest {
@@ -14,16 +13,10 @@ public class CaesarCipherTest {
             System.out.println("any other key - Exit");
             String userChoice = scanner.nextLine();
             switch (userChoice) {
-                case "1":
-                    encrypt();
-                    break;
-                case "2":
-                    decrypt();
-                    break;
-                case "3":
-                    break;
-                default:
-                    isExecuting = false;
+                case "1" -> encrypt();
+                case "2" -> decrypt();
+                case "3" -> decryptWithForce();
+                default -> isExecuting = false;
             }
         }
     }
@@ -51,8 +44,8 @@ public class CaesarCipherTest {
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(Path.of(newFileName).toString()))) {
                 while (symbol != -1) {
-                    char encryptChar = crypt == CryptEnum.Encrypt? cipher.encrypt(symbol) : cipher.decrypt(symbol);
-                    writer.write(encryptChar);
+                    char cryptChar = (crypt == CryptEnum.Encrypt) ? cipher.encrypt(symbol) : cipher.decrypt(symbol);
+                    writer.write(cryptChar);
                     symbol = bufferedReader.read();
                 }
                 writer.flush();
@@ -61,6 +54,57 @@ public class CaesarCipherTest {
             }
         } catch (IOException e) {
             System.out.println("Input file is not detected.");
+        }
+    }
+
+    private static void decryptWithForce() {
+        System.out.println("Choose a file");
+        String fileName = new Scanner(System.in).nextLine();
+
+        String newFileName = fileName.substring(0, fileName.length() - 4) + "_decrypted.txt";
+        // iterate over possible keys
+        for (int i = 0; i < CaesarCipher.alphabetLength(); i++) {
+            //calculate the total number of characters in the text and the number of spaces in the text
+            int symbolsAmount = 0;
+            int spacesAmount = 0;
+            int serviceSymbolsAmount = 0;
+
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+                 BufferedWriter writer = new BufferedWriter(new FileWriter(Path.of(newFileName).toString()))) {
+                // read encrypted file
+                int symbol = bufferedReader.read();
+                // create decryptor with a key
+                CaesarCipher cipher = new CaesarCipher(i);
+                while (symbol != -1) {
+                    symbolsAmount++;
+                    // find decrypted symbol and write into new file
+                    char decryptChar = cipher.decrypt(symbol);
+                    writer.write(decryptChar);
+                    // check if this symbol is a space symbol
+                    if (CaesarCipher.isSpaceSymbol(decryptChar)) {
+                        spacesAmount++;
+                    }
+                    // check if this symbol is a service symbol
+                    if (CaesarCipher.isServiceSymbol(decryptChar)) {
+                        serviceSymbolsAmount++;
+                    }
+                    // read further
+                    symbol = bufferedReader.read();
+                }
+                writer.flush();
+                // calculate is it time to end the iteration
+                int checkResult = 0;
+                if (spacesAmount > 0) {
+                    checkResult = (symbolsAmount - spacesAmount - serviceSymbolsAmount) / spacesAmount;
+                }
+
+                if (checkResult > 3 && checkResult < 7) {
+                    System.out.println("Key = " + cipher.getKey());
+                    break;
+                }
+            } catch (IOException e) {
+                System.out.println("Error appears while trying to write into file");
+            }
         }
     }
 }

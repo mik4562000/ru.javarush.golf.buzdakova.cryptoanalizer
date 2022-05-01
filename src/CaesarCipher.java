@@ -1,11 +1,29 @@
 public class CaesarCipher {
-    private String alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ.,\":-!? ";
+    private static String alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ.,\":-!? ";
     private String shiftedAlphabet;
+    private static String space = " ";
+    private static String serviceSymbols = ".,\":-!?";
     private final int key;
 
     public CaesarCipher(int key) {
         this.key = key;
         shiftedAlphabet = alphabet.substring(key) + alphabet.substring(0, key);
+    }
+
+    public static int alphabetLength() {
+        return alphabet.length();
+    }
+
+    public static boolean isSpaceSymbol(int symbol) {
+        return space.indexOf(symbol) > -1;
+    }
+
+    public static boolean isServiceSymbol(int symbol) {
+        return serviceSymbols.indexOf(symbol) > -1;
+    }
+
+    public int getKey() {
+        return this.key;
     }
 
     private char crypt(int symbol, String origAlphabet, String shiftedAlphabet) {
