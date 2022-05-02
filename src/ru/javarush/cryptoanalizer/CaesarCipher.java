@@ -1,3 +1,5 @@
+package ru.javarush.cryptoanalizer;
+
 public class CaesarCipher {
     private static String alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ.,\":-!? ";
     private String shiftedAlphabet;
