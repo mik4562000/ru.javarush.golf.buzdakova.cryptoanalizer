@@ -37,6 +37,7 @@ public class CaesarCipherTest {
         String fileName = scanner.nextLine();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
 
+            System.out.println("Enter the encryption key");
             int key = scanner.nextInt();
             String newFileName = fileName.substring(0, fileName.length() - 4) + newFileEnding;
 

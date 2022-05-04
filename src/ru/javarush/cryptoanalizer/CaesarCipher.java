@@ -9,7 +9,11 @@ public class CaesarCipher {
 
     public CaesarCipher(int key) {
         this.key = key;
-        shiftedAlphabet = alphabet.substring(key) + alphabet.substring(0, key);
+        int offset = key;
+        if (key >= alphabetLength()) {
+            offset = key % alphabetLength();
+        }
+        shiftedAlphabet = alphabet.substring(offset) + alphabet.substring(0, offset);
     }
 
     public static int alphabetLength() {
